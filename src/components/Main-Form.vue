@@ -31,7 +31,7 @@ const copyText = ref('Copy Text');
 
 const parseQuestions = (v) => {
     return v.map((question) => {
-        return `${question.id}. ${question.question}\n${question.answers.map((answer) => {
+        return `${question.question}\n${question.answers.map((answer) => {
             return `    ${answer}`;
         }).join('\n')}`;
     }).join('\n\n');
@@ -43,8 +43,7 @@ const shuffleQuestions = (type) => {
         if (line.trim() !== '') {
             if (line.trim().match(/^\d/)) {
                 acc.push({
-                    id: parseInt(line.trim()),
-                    question: line.trim().replace(/^\d+\.\s/, ''),
+                    question: line,
                     answers: []
                 });
             } else {
