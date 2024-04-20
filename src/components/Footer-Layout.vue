@@ -2,7 +2,11 @@
 </script>
 <template>
     <div>
-        Footer
+        made by <a href="thebrickgoat.com">thebrickgoat</a>
     </div>
 </template>
-<style scoped></style>
+<style scoped>
+div {
+    margin: 2rem 0;
+}
+</style>

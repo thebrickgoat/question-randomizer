@@ -27,6 +27,8 @@ import { ref } from 'vue';
 const inputQuestions = ref('');
 const finishedQuestions = ref('');
 
+const copyText = ref('Copy Text');
+
 const parseQuestions = (v) => {
     return v.map((question) => {
         return `${question.id}. ${question.question}\n${question.answers.map((answer) => {
@@ -74,22 +76,26 @@ const shuffleQuestions = (type) => {
     }
 }
 
+const copyQuestions = () => {
+    navigator.clipboard.writeText(finishedQuestions.value);
+    copyText.value = 'Copied!';
+    setTimeout(() => {
+        copyText.value = 'Copy Text';
+    }, 2000);
+}
+
 </script>
 <template>
     <div>
-        <div>
-            <h3>Question Format</h3>
-            <p>1. Question 1</p>
-            <p> a. Answer 1a</p>
-            <p> b. Answer 1b</p>
-            <p> c. Answer 1c</p>
-        </div>
         <div class="main__container">
 
             <textarea v-model="inputQuestions" type="textarea" placeholder="Enter Questions here." rows="35"
                 cols="50"></textarea>
-            <textarea v-model="finishedQuestions" type="textarea" placeholder="Enter your message here." rows="35"
-                cols="50"></textarea>
+            <textarea v-model="finishedQuestions" type="textarea" placeholder="Answers will show up here." rows="35"
+                cols="50">
+            </textarea>
+            <button v-if="finishedQuestions" @click="copyQuestions" class="main__copy-button">{{ copyText }}</button>
+
         </div>
         <div class="main__btn-container">
             <button @click="shuffleQuestions('q')" :disabled="!inputQuestions">Shuffle Questions</button>
@@ -105,6 +111,7 @@ const shuffleQuestions = (type) => {
     align-items: center;
     gap: 1rem;
     margin: 1rem 0;
+    position: relative;
 
 }
 
@@ -137,8 +144,25 @@ const shuffleQuestions = (type) => {
 
 .main__btn-container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    flex-wrap: wrap;
     gap: 2rem;
+}
+
+.main__copy-button {
+    position: absolute;
+    bottom: 3rem;
+    right: 3rem;
+}
+
+@media (max-width: 1024px) {
+    .main__container {
+        flex-direction: column;
+    }
+
+    .main__container textarea {
+        width: 100%;
+    }
 }
 </style>
