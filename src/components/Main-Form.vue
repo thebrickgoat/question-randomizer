@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
 /* 
     1. this is a test question
@@ -26,29 +26,7 @@ import { ref, computed } from 'vue'
 
 const inputQuestions = ref('')
 
-const inputQuestionsFormated = computed(() => {
-  const lines = inputQuestions.value.split('\n')
-  let formattedLines = []
-  let currentNumber = 1
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim()
-
-    if (line !== '') {
-      if (line.match(/^\d/)) {
-        formattedLines.push(line)
-        currentNumber = parseInt(line)
-      } else if (!line.match(/[a-zA-Z]\./)) {
-        formattedLines.push(`${currentNumber}. ${line} \n`)
-        currentNumber++
-      } else {
-        formattedLines.push(line)
-      }
-    }
-  }
-
-  return formattedLines.join('\n')
-})
+const lowestNumber = ref(0)
 
 const finishedQuestions = ref('')
 
@@ -57,7 +35,7 @@ const copyText = ref('Copy Text')
 const parseQuestions = (v) => {
   return v
     .map((question, index) => {
-      return `${index + 1}. ${question.question}\n${question.answers
+      return `${question.number ? `${lowestNumber.value + index}. ` : ``}${question.question}\n${question.answers
         .map((answer) => {
           if (answer.length > 0) {
             return `    ${answer}`
@@ -65,14 +43,23 @@ const parseQuestions = (v) => {
         })
         .join('\n')}`
     })
-    .join('\n\n')
+    .join('\n')
 }
 
 const shuffleQuestions = (type) => {
-  let questionsObj = inputQuestionsFormated.value.split('\n').reduce((acc, line) => {
+  let questionsObj = inputQuestions.value.split('\n').reduce((acc, line, index) => {
     if (line.trim() !== '') {
-      if (line.trim().match(/^\d/)) {
+      if (!line.trim().match(/^[a-zA-Z]\./)) {
+        if (index === 0) {
+          lowestNumber.value = parseInt(line.trim().split('.')[0])
+        }
         acc.push({
+          number: line
+            .trim()
+            .split('.')[0]
+            .match(/^[0-9]*$/)
+            ? line.trim().split('.')[0]
+            : undefined,
           question: line.trim().replace(/^\d+\.\s/, ''),
           answers: []
         })
@@ -113,6 +100,7 @@ const copyQuestions = () => {
   }, 2000)
 }
 </script>
+
 <template>
   <div>
     <div class="main__container">
