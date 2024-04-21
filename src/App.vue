@@ -1,7 +1,7 @@
 <script setup>
-import HeaderLayout from './components/Header-Layout.vue';
-import MainForm from './components/Main-Form.vue';
-import FooterLayout from './components/Footer-Layout.vue';
+import HeaderLayout from './components/Header-Layout.vue'
+import MainForm from './components/Main-Form.vue'
+import FooterLayout from './components/Footer-Layout.vue'
 </script>
 
 <template>
